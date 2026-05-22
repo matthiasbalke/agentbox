@@ -544,7 +544,7 @@ Examples:
     agentbox shell --admin                # Start admin shell with sudo access
     agentbox --add-dir ~/1 --add-dir ~/2  # Add dirs with Claude CLI
     agentbox python script.py             # Run Python script in container
-    agentbox -e GH_TOKEN                  # Forward GH_TOKEN from host environment
+    agentbox -e GH_TOKEN=\$(op read '...')  # Pass env var (e.g. from 1Password)
     agentbox --rebuild                    # Force rebuild image
     agentbox ssh-init                     # Set up SSH for AgentBox
     AGENTBOX_TOOL=opencode agentbox copilot       # Use env var to select tool
