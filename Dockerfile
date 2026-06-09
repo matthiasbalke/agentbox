@@ -36,7 +36,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         # Java dependencies
         default-jdk maven gradle \
         # Search tools
-        ripgrep fd-find && \
+        ripgrep fd-find \
+        # codex dependencies
+        bubblewrap && \
     # Setup locale
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
@@ -222,6 +224,9 @@ RUN curl -fsSL https://opencode.ai/install | bash && \
 
 RUN curl -fsSL https://gh.io/copilot-install | bash && \
     zsh -i -c 'which copilot && copilot --version'
+
+RUN curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh && \
+    zsh -i -c 'which codex && codex --version'
 
 # Entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
