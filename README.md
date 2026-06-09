@@ -54,7 +54,9 @@ agentbox --help
 
 - claude code: built-in
 - opencode: built-in
-- any other agents (copilot CLI, Aider, Cursor CLI...): easily add it yourself using the prompt at [docs/prompts/add-tool.md](docs/prompts/add-tool.md).
+- GitHub Copilot CLI: built-in
+- OpenAI Codex CLI: built-in
+- any other agents (Aider, Cursor CLI...): easily add it yourself using the prompt at [docs/prompts/add-tool.md](docs/prompts/add-tool.md).
 
 ### Adding tools
 
@@ -89,13 +91,19 @@ agentbox
 # Use OpenCode instead of Claude
 agentbox --tool opencode
 
+# Use GitHub Copilot-CLI
+agentbox --tool copilot
+
+# Use Codex in full-access mode inside the container
+agentbox --tool codex
+
 # Or set via environment variable
 AGENTBOX_TOOL=opencode agentbox
 
 # Show available commands
 agentbox --help
 
-# Non-agentbox CLI flags are passed through to claude.
+# Non-AgentBox CLI flags are passed through to the selected tool.
 # For example, to continue the most recent session
 agentbox -c
 
@@ -133,6 +141,8 @@ Persistent data (survives container removal):
   History: ~/.agentbox/projects/agentbox-<hash>/history/
   Claude: ~/.claude
   OpenCode: ~/.config/opencode and ~/.local/share/opencode
+  Copilot: ~/.copilot and ~/.cache/copilot
+  Codex: ~/.codex
 ```
 
 ## Languages and Tools
@@ -145,6 +155,8 @@ The unified container image includes:
 - **Shell**: Zsh (default) and Bash with common utilities
 - **Claude CLI**: Pre-installed with per-project authentication
 - **OpenCode**: Pre-installed as an alternative AI coding tool
+- **GitHub Copilot CLI**: Pre-installed as an alternative AI coding tool
+- **OpenAI Codex CLI**: Pre-installed as an alternative AI coding tool
 
 ## Authenticating to Git or other SCC Providers
 
@@ -222,7 +234,7 @@ Zsh history is preserved in `~/.agentbox/projects/<container-name>/history`
 
 ### Tool Authentication
 
-Both tools use bind mounts to share authentication across all AgentBox projects:
+The tools use bind mounts to share authentication across all AgentBox projects:
 
 **Claude CLI**:
 - `~/.claude` mounted at `/home/agent/.claude`
@@ -230,6 +242,15 @@ Both tools use bind mounts to share authentication across all AgentBox projects:
 **OpenCode**:
 - Config: `~/.config/opencode` mounted at `/home/agent/.config/opencode`
 - Auth: `~/.local/share/opencode` mounted at `/home/agent/.local/share/opencode`
+
+**GitHub Copilot CLI**:
+- Config: `~/.copilot` mounted at `/home/agent/.copilot`
+- Cache: `~/.cache/copilot` mounted at `/home/agent/.cache/copilot`
+
+**OpenAI Codex CLI**:
+- Config and auth: `~/.codex` mounted at `/home/agent/.codex`
+- Sign in with ChatGPT or an OpenAI API key on first use
+- For headless login, run `agentbox --tool codex login --device-auth`
 
 ## Advanced Usage
 
