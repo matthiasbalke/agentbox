@@ -226,9 +226,6 @@ RUN curl -fsSL https://opencode.ai/install | bash && \
 RUN curl -fsSL https://gh.io/copilot-install | bash && \
     zsh -i -c 'which copilot && copilot --version'
 
-RUN curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh && \
-    zsh -i -c 'which codex && codex --version'
-
 # Entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/bin/zsh"]
