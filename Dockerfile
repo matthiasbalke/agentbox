@@ -124,7 +124,8 @@ RUN bash -c "source $NVM_DIR/nvm.sh && \
         nodemon \
         yarn \
         pnpm \
-        bun"
+        bun \
+        @openai/codex"
 
 # Install SDKMAN for Java toolchain management
 RUN curl -s "https://get.sdkman.io?rcupdate=false" | bash && \
