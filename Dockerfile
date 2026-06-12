@@ -36,7 +36,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         # Java dependencies
         default-jdk maven gradle \
         # Search tools
-        ripgrep fd-find && \
+        ripgrep fd-find \
+        # codex dependencies
+        bubblewrap && \
     # Setup locale
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
@@ -121,7 +123,9 @@ RUN bash -c "source $NVM_DIR/nvm.sh && \
         prettier \
         nodemon \
         yarn \
-        pnpm"
+        pnpm \
+        bun \
+        @openai/codex"
 
 # Install SDKMAN for Java toolchain management
 RUN curl -s "https://get.sdkman.io?rcupdate=false" | bash && \
@@ -218,6 +222,9 @@ RUN curl -fsSL https://claude.ai/install.sh | bash -s stable && \
 
 RUN curl -fsSL https://opencode.ai/install | bash && \
     zsh -i -c 'which opencode && opencode --version'
+
+RUN curl -fsSL https://gh.io/copilot-install | bash && \
+    zsh -i -c 'which copilot && copilot --version'
 
 # Entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

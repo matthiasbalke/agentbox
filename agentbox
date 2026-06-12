@@ -359,6 +359,30 @@ run_container() {
         )
 
         log_info "OpenCode configuration and auth mounted"
+    elif [[ "$tool" == "copilot" ]]; then
+        local copilot_config_dir="${HOME}/.copilot"
+        local copilot_cache_dir="${HOME}/.cache/copilot"
+
+        mkdir -p "$copilot_config_dir"
+        mkdir -p "$copilot_cache_dir"
+
+        mount_opts+=(
+            -v "${copilot_config_dir}:/home/agent/.copilot"
+            -v "${copilot_cache_dir}:/home/agent/.cache/copilot"
+        )
+
+        log_info "GitHub Copilot configuration and cache mounted"
+    elif [[ "$tool" == "codex" ]]; then
+        local codex_dir="${HOME}/.codex"
+
+        mkdir -p "$codex_dir"
+
+        mount_opts+=(
+            -v "${codex_dir}:/home/agent/.codex"
+            --env "CODEX_HOME=/home/agent/.codex"
+        )
+
+        log_info "Codex configuration and authentication mounted"
     else
         local claude_dir="${HOME}/.claude"
 
@@ -397,6 +421,10 @@ run_container() {
         local tool_cmd
         if [[ "$tool" == "opencode" ]]; then
             tool_cmd="opencode"
+        elif [[ "$tool" == "copilot" ]]; then
+            tool_cmd="copilot --allow-all-tools"
+        elif [[ "$tool" == "codex" ]]; then
+            tool_cmd="codex --yolo"
         else
             tool_cmd="claude --dangerously-skip-permissions"
         fi
@@ -502,7 +530,7 @@ Usage:
 
 Options:
     -h, --help                  Show this help message
-    --tool TOOL                 Choose tool: claude (default) or opencode
+    --tool TOOL                 Choose tool: claude (default), opencode, copilot, or codex
     -e KEY[=VALUE]              Pass environment variable to container (can be used multiple times)
                                 KEY alone forwards it from the host
     -p PORT                     Forward a port from host to container (can be used multiple times)
@@ -512,17 +540,19 @@ Options:
     --dangerously-mount-docker  Mount Docker socket (requires Docker Desktop)
 
 Commands:
-    shell [--admin]             Start interactive shell instead of Claude CLI
+    shell [--admin]             Start interactive shell instead of the selected tool
     ssh-init                    Initialize SSH directory for AgentBox
 
-    If no command is provided, Claude CLI will be started automatically.
-    Use 'shell' command to get a shell instead of Claude CLI.
+    If no command is provided, the selected tool will be started automatically.
+    Use 'shell' command to get a shell instead of the selected tool.
     Use 'shell --admin' to get a shell with sudo privileges.
     Other commands will be executed inside the container.
 
 Examples:
     agentbox                              # Start Claude CLI for current project
     agentbox --tool opencode              # Start OpenCode instead of Claude
+    agentbox --tool copilot               # Start GitHub Copilot instead of Claude
+    agentbox --tool codex                 # Start Codex instead of Claude
     agentbox -p 3002                      # Forward port 3002
     agentbox -p 3002:8080                 # Map host port 3002 to container port 8080
     agentbox shell                        # Start interactive shell instead of Claude
@@ -532,7 +562,7 @@ Examples:
     agentbox -e GH_TOKEN                  # Forward GH_TOKEN from host environment
     agentbox --rebuild                    # Force rebuild image
     agentbox ssh-init                     # Set up SSH for AgentBox
-    AGENTBOX_TOOL=opencode agentbox       # Use env var to select tool
+    AGENTBOX_TOOL=codex agentbox           # Use env var to select tool
 
 Environment variables (set in ~/.agentbox/.env):
     AGENTBOX_EXTRA_HOSTS    Comma-separated host:ip pairs added to container /etc/hosts
@@ -641,7 +671,7 @@ main() {
             --tool)
                 shift
                 if [[ -z "${1:-}" ]]; then
-                    log_error "--tool requires a value (claude or opencode)"
+                    log_error "--tool requires a value (claude, opencode, copilot or codex)"
                     exit 1
                 fi
                 tool="$1"
@@ -675,8 +705,8 @@ main() {
     done
 
     # Validate tool selection
-    if [[ "$tool" != "claude" && "$tool" != "opencode" ]]; then
-        log_error "Invalid tool: $tool (must be 'claude' or 'opencode')"
+    if [[ "$tool" != "claude" && "$tool" != "opencode" && "$tool" != "copilot" && "$tool" != "codex" ]]; then
+        log_error "Invalid tool: $tool (must be 'claude', 'opencode', 'copilot' or 'codex')"
         exit 1
     fi
 

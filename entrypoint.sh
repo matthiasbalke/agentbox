@@ -69,6 +69,10 @@ if [ -t 0 ] && [ -t 1 ]; then
     echo "☕ Java: $(java -version 2>&1 | head -1 | cut -d'"' -f2 || echo 'not found')"
     if [ "$TOOL" = "opencode" ]; then
         echo "🤖 OpenCode: $(opencode --version 2>/dev/null || echo 'not found - check installation')"
+    elif [ "$TOOL" = "copilot" ]; then
+        echo "🤖 Copilot: $(copilot --version | head -1 2>/dev/null || echo 'not found - check installation')"
+    elif [ "$TOOL" = "codex" ]; then
+        echo "🤖 Codex: $(codex --version 2>/dev/null || echo 'not found - check installation')"
     else
         echo "🤖 Claude CLI: $(claude --version 2>/dev/null || echo 'not found - check installation')"
     fi
