@@ -129,7 +129,12 @@ RUN bash -c "source $NVM_DIR/nvm.sh && \
         pnpm \
         bun \
         @openai/codex \
-        @fission-ai/openspec@latest"
+        @fission-ai/openspec@latest \
+        playwright"
+
+# install headlesse browser for e2e tests
+RUN bash -c "source $NVM_DIR/nvm.sh && \
+    bunx playwright install --with-deps --no-shell chromium"
 
 # Install SDKMAN for Java toolchain management
 RUN curl -s "https://get.sdkman.io?rcupdate=false" | bash && \
