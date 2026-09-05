@@ -130,7 +130,10 @@ RUN bash -c "source $NVM_DIR/nvm.sh && \
         bun \
         @openai/codex \
         @fission-ai/openspec@latest \
-        playwright"
+        playwright@latest"
+
+# install linting for GitHub Actions
+RUN bash -c 'bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest /home/${USERNAME}/.local/bin'
 
 # install headlesse browser for e2e tests
 RUN bash -c "source $NVM_DIR/nvm.sh && \
