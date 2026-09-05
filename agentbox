@@ -498,6 +498,13 @@ run_container() {
         fi
     done
 
+    # Build dns server arguments
+    local dns_args=()
+    for dns_server in "${dns_servers[@]}"; do
+      log_info "DNS server: ${dns_server}"
+      dns_args+=(--dns=${dns_server})
+    done
+
     # Build runtime-specific arguments
     local runtime_args=()
     if [[ "$RUNTIME" == "podman" ]]; then
@@ -508,6 +515,7 @@ run_container() {
     $RUNTIME run -it --rm \
         --name "$container_name" \
         --hostname "agentbox-$PROJECT_NAME" \
+        "${dns_args[@]}" \
         "${runtime_args[@]}" \
         "${host_args[@]}" \
         "${port_args[@]}" \
@@ -623,6 +631,7 @@ main() {
     local cmd_args=()
     declare -a ports=()
     local extra_dirs=()
+    local dns_servers=()
     local env_vars=()
     local tool="${AGENTBOX_TOOL:-claude}"
     local ignore_dot_env=false
@@ -666,6 +675,15 @@ main() {
                     exit 1
                 fi
                 extra_dirs+=("$1")
+                shift
+                ;;
+            --dns)
+                shift
+                if [[ -z "${1:-}" ]]; then
+                    log_error "--dns requires an ip address"
+                    exit 1
+                fi
+                dns_servers+=("$1")
                 shift
                 ;;
             --tool)
