@@ -562,7 +562,7 @@ Examples:
     agentbox -e GH_TOKEN                  # Forward GH_TOKEN from host environment
     agentbox --rebuild                    # Force rebuild image
     agentbox ssh-init                     # Set up SSH for AgentBox
-    AGENTBOX_TOOL=codex agentbox           # Use env var to select tool
+    AGENTBOX_TOOL=opencode codex agentbox copilot       # Use env var to select tool
 
 Environment variables (set in ~/.agentbox/.env):
     AGENTBOX_EXTRA_HOSTS    Comma-separated host:ip pairs added to container /etc/hosts
