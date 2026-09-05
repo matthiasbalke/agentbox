@@ -137,7 +137,7 @@ RUN bash -c 'bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main
 
 # install headlesse browser for e2e tests
 RUN bash -c "source $NVM_DIR/nvm.sh && \
-    bunx playwright install --with-deps chromium"
+    bunx @playwright/test@1.62.1 install --only-shell chromium"
 
 # Install SDKMAN for Java toolchain management
 RUN curl -s "https://get.sdkman.io?rcupdate=false" | bash && \
