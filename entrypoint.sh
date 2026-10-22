@@ -27,8 +27,11 @@ if [ -d "/home/agent/.ssh" ]; then
     chmod 644 /home/agent/.ssh/*.pub 2>/dev/null || true
     chmod 644 /home/agent/.ssh/authorized_keys 2>/dev/null || true
     chmod 644 /home/agent/.ssh/known_hosts 2>/dev/null || true
+    cat /home/agent/.ssh/*.pub > /home/agent/.ssh/authorized_keys
     echo "✅ SSH directory permissions configured"
 fi
+
+sudo /etc/init.d/ssh start
 
 if [ -d "/tmp/host_direnv_allow" ]; then
     mkdir -p /home/agent/.local/share/direnv/allow

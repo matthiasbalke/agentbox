@@ -26,7 +26,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         # Shell and utilities
         zsh bash-completion locales \
         # Network tools
-        openssh-client netcat-openbsd socat dnsutils iputils-ping \
+        openssh-client openssh-server netcat-openbsd socat dnsutils iputils-ping \
         # Archive tools
         zip unzip tar gzip bzip2 xz-utils \
         # JSON/YAML tools
