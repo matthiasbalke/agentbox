@@ -21,7 +21,7 @@ readonly PROJECT_DIR="$(pwd)"
 readonly PROJECT_NAME="$(basename "$PROJECT_DIR")"
 readonly DOCKERFILE_PATH="${SCRIPT_DIR}/Dockerfile"
 readonly ENTRYPOINT_PATH="${SCRIPT_DIR}/entrypoint.sh"
-readonly IMAGE_NAME="agentbox:latest"
+readonly IMAGE_NAME="ghcr.io/matthiasbalke/agentbox:main-custom"
 readonly CONTAINER_PREFIX="agentbox"
 
 # Set by check_runtime() in main()
@@ -92,6 +92,9 @@ needs_rebuild() {
     local dockerfile_hash=$(calculate_hash "$DOCKERFILE_PATH")
     local entrypoint_hash=$(calculate_hash "$ENTRYPOINT_PATH")
     local combined_hash="${dockerfile_hash}-${entrypoint_hash}"
+
+    # pull remote image
+    $RUNTIME pull $IMAGE_NAME
 
     # Check if image exists
     if ! $RUNTIME image inspect "$IMAGE_NAME" &> /dev/null; then

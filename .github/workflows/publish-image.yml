@@ -20,6 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Calculate image hash
+        id: hash
+        shell: bash
+        run: |
+          dockerfile_hash=$(sha256sum Dockerfile | cut -d' ' -f1)
+          entrypoint_hash=$(sha256sum entrypoint.sh | cut -d' ' -f1)
+          echo "combined_hash=${dockerfile_hash}-${entrypoint_hash}" >> "$GITHUB_OUTPUT"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -45,6 +53,8 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          labels: |
+            ${{ steps.metadata.outputs.labels }}
+            agentbox.hash=${{ steps.hash.outputs.combined_hash }}
           cache-from: type=gha,scope=${{ github.ref_name }}
           cache-to: type=gha,mode=max,scope=${{ github.ref_name }}
