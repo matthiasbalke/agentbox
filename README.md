@@ -272,6 +272,10 @@ The image automatically rebuilds when:
 - Dockerfile or entrypoint.sh changes
 - Image is older than 48 hours (to get latest tool versions)
 
+### Published Images
+
+Pushes to `main` and `main-custom` build and publish the image to `ghcr.io/<owner>/agentbox` using GitHub Actions. The `main` branch publishes the `main` and `latest` tags; `main-custom` publishes only the `main-custom` tag. The workflow uses the built-in `GITHUB_TOKEN`, so no additional registry secret is required.
+
 ## Tool / Dependency Versions
 The Dockerfile is configured to pull the latest stable version of each tool (NVM, GitLab CLI, etc.) during the build process. This makes maintenance easy and ensures that we always use current software. It also means that rebuilding the container image may automatically result in newer versions of tools being installed, which could introduce unexpected behavior or breaking changes. If you require specific tool versions, consider pinning them in the Dockerfile.
 
